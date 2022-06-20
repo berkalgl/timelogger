@@ -22,28 +22,17 @@ namespace Timelogger.Api.Controllers
 			return "Hello Back!";
 		}
 
-        // GET api/projects?Offset=0&PageSize=10&Sort.Direction=DESC&Sort.Field=Deadline
+        // GET api/projects?name=a
         [HttpGet]
-		public ServiceResult<List<ProjectDTO>> Get()
+		public ServiceResult<List<ProjectDTO>> Get(string name)
 		{
 			return new ServiceResult<List<ProjectDTO>>
             {
                 Message = ReturnMessages.Success,
-                Result = _projectService.GetProjects()
+                Result = _projectService.GetProjects(name)
             };
         }
-        // GET api/projects/GetById
-        [HttpGet]
-        [Route("GetById")]
-        public ServiceResult<ProjectDTO> GetById(int id)
-        {
-            return new ServiceResult<ProjectDTO>
-            {
-                Message = ReturnMessages.Success,
-                Result = _projectService.GetProjectById(id)
-            };
-        }
-        // Post api/projects/AddProject
+        // POST api/projects/AddProject
         [Route("AddProject")]
         [HttpPost]
         public ServiceResult<ProjectDTO> AddProject([FromBody] ProjectDTO projectDTO)

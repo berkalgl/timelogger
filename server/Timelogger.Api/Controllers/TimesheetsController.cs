@@ -14,17 +14,17 @@ namespace Timelogger.Api.Controllers
 		{
             _timesheetService = timesheetService;
 		}
-        // GET api/timesheets?Offset=0&PageSize=10&Sort.Direction=DESC&Sort.Field=Deadline&Filter[0].Field=ProjectId&Filter[0].Value=1&Filter[0].Operator==
+        // GET api/timesheets?projectId=
         [HttpGet]
-		public ServiceResult<List<TimesheetDTO>> Get()
+		public ServiceResult<List<TimesheetDTO>> Get(int projectId)
 		{
 			return new ServiceResult<List<TimesheetDTO>> 
             { 
 				Message = ReturnMessages.Success,
-				Result = _timesheetService.GetTimesheets()
+				Result = _timesheetService.GetTimesheets(projectId)
             };
         }
-        // Post api/timesheets/AddTimesheet
+        // POST api/timesheets/AddTimesheet
         [Route("AddTimesheet")]
         [HttpPost]
         public ServiceResult<TimesheetDTO> AddTimesheet([FromBody] TimesheetDTO timesheetDTO)

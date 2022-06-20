@@ -1,26 +1,27 @@
 import React from 'react';
+import { Button, Modal } from 'react-bootstrap';
 
-export default function Modal(props) {
-	const {modalBody, title} = props;  
+export default function CommonModal(props) {
+	
+	const {show, handleClose, handleSave, title} = props;  
+
+	if (!show)
+		return (<></>)
+		
 	return (
-	<div className="modal" role="dialog">
-		<div className="modal-dialog" role="document">
-			<div className="modal-content">
-				<div className="modal-header">
-					<h5 className="modal-title">{title}</h5>
-					<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div className="modal-body">
-					{modalBody}
-				</div>
-				<div className="modal-footer">
-					<button type="button" className="btn btn-primary">Save changes</button>
-					<button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
+		<Modal show={show} onHide={handleClose}>
+			<Modal.Header closeButton>
+				<Modal.Title>{title}</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>{props.children}</Modal.Body>
+			<Modal.Footer>
+				<Button variant="secondary" onClick={handleClose}>
+					Close
+				</Button>
+				<Button variant="primary" onClick={handleSave}>
+					Save Changes
+				</Button>
+			</Modal.Footer>
+		</Modal>
 	);
 }

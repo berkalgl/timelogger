@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Timelogger.Domain.Core.Exceptions;
-using Timelogger.Domain.Core.Extentions;
 using Timelogger.Domain.Core.Interfaces;
 using Timelogger.Infrastructure.Entities;
 
@@ -15,9 +14,9 @@ namespace Timelogger.Domain.Timesheets
         {
             _unitOfWork = unitOfWork;
         }
-        public List<TimesheetDTO> GetTimesheets()
+        public List<TimesheetDTO> GetTimesheets(int projectId)
         {
-            var baseQuery = _unitOfWork.TimesheetRepository.Find(i =>!i.IsDeleted);
+            var baseQuery = _unitOfWork.TimesheetRepository.Find(i =>!i.IsDeleted && i.ProjectId.Equals(projectId));
 
             return baseQuery.Select(i => new TimesheetDTO { Id = i.Id, ProjectId = i.ProjectId, Comment = i.Comment, StartTime = i.StartTime, EndTime = i.EndTime }).ToList();
         }
@@ -50,6 +49,15 @@ namespace Timelogger.Domain.Timesheets
         }
         private void IsValid(TimesheetDTO timesheetDTO)
         {
+            if(timesheetDTO == null)
+                throw new TimeloggerException("input cannot be empty");
+
+            if (String.IsNullOrEmpty(timesheetDTO.Comment))
+                throw new TimeloggerException("Comment cannot be empty");
+
+            if (timesheetDTO.ProjectId == 0)
+                throw new TimeloggerException("project id cannot be empty");
+
             if (timesheetDTO.StartTime == DateTime.MinValue)
                 throw new TimeloggerException("Start time cannot be empty");
 
@@ -58,6 +66,9 @@ namespace Timelogger.Domain.Timesheets
 
             if (timesheetDTO.StartTime > timesheetDTO.EndTime)
                 throw new TimeloggerException("Start time cannot be bigger than End time");
+
+            if (timesheetDTO.StartTime == timesheetDTO.EndTime)
+                throw new TimeloggerException("Start time cannot be equal to End time");
 
             //check if timesheets intersect with each other
             var checkSameTime = _unitOfWork.TimesheetRepository

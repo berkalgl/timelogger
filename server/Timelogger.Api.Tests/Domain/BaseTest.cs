@@ -44,16 +44,16 @@ namespace Timelogger.Api.Tests.Domain
                     ProjectId = 1,
                     IsDeleted = false,
                     Comment = "e-conomic Interview worked 1",
-                    StartTime = new System.DateTime(2022, 6, 12, 14, 30, 0),
-                    EndTime = new System.DateTime(2022, 6, 12, 15, 30, 0),
+                    StartTime = new DateTime(2022, 6, 12, 14, 30, 0),
+                    EndTime = new DateTime(2022, 6, 12, 15, 30, 0),
                 },
                 new Timesheet{
                     Id = 2,
                     ProjectId = 1,
                     IsDeleted = false,
                     Comment = "e-conomic Interview worked 2",
-                    StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0),
-                    EndTime = new System.DateTime(2022, 6, 13, 18, 00, 0),
+                    StartTime = new DateTime(2022, 6, 13, 17, 00, 0),
+                    EndTime = new DateTime(2022, 6, 13, 18, 00, 0),
                 }
             };
 
@@ -68,8 +68,7 @@ namespace Timelogger.Api.Tests.Domain
             #endregion
 
             #region ProjectRepository Setup
-            projectRepository.Setup(_ => _.Find(i => !i.IsDeleted)).Returns(projects);
-            projectRepository.Setup(_ => _.GetById(1)).Returns(projects[0]);
+            projectRepository.Setup(_ => _.Find(i => !i.IsDeleted && (String.IsNullOrEmpty(null) || i.Name.Contains(null)))).Returns(projects);
             projectRepository.Setup(_ => _.GetAll()).Returns(projects);
             projectRepository.Setup(_ => _.AddAndSave(new Project() 
             { 
@@ -86,11 +85,11 @@ namespace Timelogger.Api.Tests.Domain
             {
                 ProjectId = 1,
                 Comment = "TimesheetComment",
-                StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0),
-                EndTime = new System.DateTime(2022, 6, 13, 17, 00, 0)
+                StartTime = new DateTime(2022, 6, 13, 17, 00, 0),
+                EndTime = new DateTime(2022, 6, 13, 18, 00, 0)
             })).Verifiable();
             timesheetRepository.Setup(_ => _.GetAll()).Returns(timesheets);
-            timesheetRepository.Setup(_ => _.Find(i => !i.IsDeleted)).Returns(timesheets);
+            timesheetRepository.Setup(_ => _.Find(i => !i.IsDeleted && i.ProjectId.Equals(1))).Returns(timesheets);
             timesheetRepository.Setup(_ => _.Find(i => i.ProjectId.Equals(1))).Returns(timesheets);
             _mockUnitOfWork.Setup(_ => _.TimesheetRepository).Returns(timesheetRepository.Object);
             #endregion

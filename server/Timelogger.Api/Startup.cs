@@ -83,13 +83,13 @@ namespace Timelogger.Api
 				new Project{
 					Id = 1,
 					Name = "e-conomic Interview",
-					Deadline = System.DateTime.Now,
+					Deadline = System.DateTime.Now.ToUniversalTime(),
                     IsDeleted = false
                 },
                 new Project{
                     Id = 2,
-                    Name = "e-conomic Interview2",
-                    Deadline = System.DateTime.Now.AddDays(3),
+                    Name = "Timelogger project",
+                    Deadline = System.DateTime.Now.AddDays(3).ToUniversalTime(),
 					IsDeleted = false
                 }
             };
@@ -101,32 +101,32 @@ namespace Timelogger.Api
 					ProjectId = 1,
                     IsDeleted = false,
                     Comment = "e-conomic Interview worked 1",
-                    StartTime = new System.DateTime(2022, 6, 12, 14, 30, 0),
-					EndTime = new System.DateTime(2022, 6, 12, 15, 30, 0),
+                    StartTime = new System.DateTime(2022, 6, 12, 14, 30, 0).ToUniversalTime(),
+					EndTime = new System.DateTime(2022, 6, 12, 15, 30, 0).ToUniversalTime(),
                 },
                 new Timesheet{
                     Id = 2,
                     ProjectId = 1,
 					IsDeleted = false,
                     Comment = "e-conomic Interview worked 2",
-                    StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0),
-                    EndTime = new System.DateTime(2022, 6, 13, 18, 00, 0),
+                    StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0).ToUniversalTime(),
+                    EndTime = new System.DateTime(2022, 6, 13, 18, 00, 0).ToUniversalTime(),
                 },
                 new Timesheet{
                     Id = 3,
                     ProjectId = 2,
                     IsDeleted = false,
                     Comment = "e-conomic Interview worked 21",
-                    StartTime = new System.DateTime(2022, 6, 12, 14, 30, 0),
-                    EndTime = new System.DateTime(2022, 6, 12, 15, 30, 0),
+                    StartTime = new System.DateTime(2022, 6, 12, 14, 30, 0).ToUniversalTime(),
+                    EndTime = new System.DateTime(2022, 6, 12, 15, 30, 0).ToUniversalTime(),
                 },
                 new Timesheet{
                     Id = 4,
                     ProjectId = 2,
                     IsDeleted = false,
                     Comment = "e-conomic Interview worked 22",
-                    StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0),
-                    EndTime = new System.DateTime(2022, 6, 13, 18, 00, 0),
+                    StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0).ToUniversalTime(),
+                    EndTime = new System.DateTime(2022, 6, 13, 18, 00, 0).ToUniversalTime(),
                 }
             };
 

@@ -22,7 +22,7 @@ namespace Timelogger.Api.Tests.Domain
         {
             // Arrange
             //Act
-            var result = _timesheetService.GetTimesheets();
+            var result = _timesheetService.GetTimesheets(1);
 
             //Assert
             Assert.AreEqual(result.Count, 2);
@@ -38,7 +38,7 @@ namespace Timelogger.Api.Tests.Domain
                 ProjectId = 1,
                 Comment = "TimesheetComment",
                 StartTime = new System.DateTime(2022, 6, 13, 17, 00, 0),
-                EndTime = new System.DateTime(2022, 6, 13, 17, 00, 0)
+                EndTime = new System.DateTime(2022, 6, 13, 18, 00, 0)
             };
             //Act
             var returnTimesheetDTO = _timesheetService.AddTimesheet(timesheetDTO);

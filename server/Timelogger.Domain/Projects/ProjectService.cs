@@ -16,9 +16,9 @@ namespace Timelogger.Domain.Projects
         {
             _unitOfWork = unitOfWork;
         }
-        public List<ProjectDTO> GetProjects()
+        public List<ProjectDTO> GetProjects(string name)
         {
-            var baseQuery = _unitOfWork.ProjectRepository.Find(i => !i.IsDeleted);
+            var baseQuery = _unitOfWork.ProjectRepository.Find(i => !i.IsDeleted && (String.IsNullOrEmpty(name) || i.Name.Contains(name)));
 
             var result = baseQuery
                 .Select(i => 
@@ -27,16 +27,8 @@ namespace Timelogger.Domain.Projects
                     Id = i.Id,
                     Name = i.Name, 
                     Deadline = i.Deadline, 
-                    TotalHoursWorked = GetTotalHoursWorked(i.Id), 
-                    timesheets = _unitOfWork.TimesheetRepository.Find(t => !t.IsDeleted).Where(t => t.ProjectId.Equals(i.Id)).Select(i =>
-                        new TimesheetDTO 
-                        { 
-                            Id = i.Id, 
-                            ProjectId = i.ProjectId, 
-                            Comment = i.Comment, 
-                            StartTime = i.StartTime, 
-                            EndTime = i.EndTime }).ToList()
-                    }).ToList();
+                    TotalHoursWorked = GetTotalHoursWorked(i.Id)
+                }).ToList();
 
             return result;
 }
@@ -66,26 +58,15 @@ namespace Timelogger.Domain.Projects
             return projectDTO;
 
         }
-        public ProjectDTO GetProjectById(int id)
-        {
-            //We can create a Static Language File for hard coded strings.
-            if (id == 0)
-                throw new TimeloggerException("Id cannot be zero");
-
-            var project = _unitOfWork.ProjectRepository.GetById(id);
-
-            if (project is null)
-                throw new TimeloggerException("Could not be found !");
-
-            return new ProjectDTO { Id = project.Id, Name = project.Name };
-
-        }
         private double GetTotalHoursWorked(int projectId)
         {
-            return _unitOfWork.TimesheetRepository.Find(i => i.ProjectId.Equals(projectId)).Select(i => (i.EndTime - i.StartTime).TotalHours).Sum();
+            return Math.Round(_unitOfWork.TimesheetRepository.Find(i => i.ProjectId.Equals(projectId)).Select(i => (i.EndTime - i.StartTime).TotalHours).Sum(), 2);
         }
         private void IsValid(ProjectDTO projectDTO)
         { 
+            if (projectDTO == null)
+                throw new TimeloggerException("Input project cannot be null or empty");
+
             if (string.IsNullOrEmpty(projectDTO.Name))
                 throw new TimeloggerException("Name cannot be null or empty");
 

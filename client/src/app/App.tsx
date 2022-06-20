@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Projects from './views/Projects';
 import './tailwind.generated.css';
+import "react-datepicker/dist/react-datepicker-cssmodules.css";
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function App() {
     return (

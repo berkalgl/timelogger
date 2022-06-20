@@ -21,7 +21,7 @@ namespace Timelogger.Api.Tests.Domain
         {
             // Arrange
             //Act
-            var result = _projectService.GetProjects();
+            var result = _projectService.GetProjects(null);
 
             //Assert
             Assert.AreEqual(result.Count, 2);
@@ -29,39 +29,15 @@ namespace Timelogger.Api.Tests.Domain
 
         }
         [Test]
-        public void GetProjectById_ShouldReturnId_1_WithId_1()
+        public void GetProject_ShouldNotReturnResult_WithNonExistedName()
         {
             // Arrange
-            int id = 1;
             //Act
-            var project = _projectService.GetProjectById(id);
+            var result = _projectService.GetProjects("Nonexisted");
 
             //Assert
-            Assert.AreEqual(project.Id, 1);
+            Assert.AreEqual(result.Count, 0);
 
-        }
-        [Test]
-        public void GetProjectById_ShouldIdCannotBeZero_WithId_0()
-        {
-            // Arrange
-            int id = 0;
-            //Act
-            var ex = Assert.Throws<TimeloggerException>(() => _projectService.GetProjectById(id));
-
-            //Assert
-            Assert.That(ex.Message == "Id cannot be zero");
-
-        }
-        [Test]
-        public void GetProjectById_ShouldReturnCouldNotBeFound_WithNonExistedId()
-        {
-            // Arrange
-            int id = -1;
-            //Act
-            var ex = Assert.Throws<TimeloggerException>(() => _projectService.GetProjectById(id));
-
-            //Assert
-            Assert.That(ex.Message == "Could not be found !");
         }
         [Test]
         public void AddProject_ShouldAddAndReturnId_WithNonEmptyInput()

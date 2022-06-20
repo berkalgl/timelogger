@@ -9,6 +9,5 @@ namespace Timelogger.Domain.Projects
         public string Name { get; set; }
         public DateTime Deadline { get; set; }
         public double TotalHoursWorked { get; set; }
-        public List<Timesheets.TimesheetDTO> timesheets { get; set; }
     }
 }

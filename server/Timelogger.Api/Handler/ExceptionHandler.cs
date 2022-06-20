@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace Timelogger.Api.Handler
             }
             filterContext.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
             filterContext.Response.ContentType = new MediaTypeHeaderValue("application/json").ToString();
-            await filterContext.Response.WriteAsync(JsonConvert.SerializeObject(result));
+            await filterContext.Response.WriteAsync(JsonConvert.SerializeObject(result, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
         }
     }
