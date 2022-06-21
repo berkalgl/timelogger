@@ -24,7 +24,7 @@ namespace Timelogger.Api.Tests.Domain
             var result = _projectService.GetProjects(null);
 
             //Assert
-            Assert.AreEqual(result.Count, 2);
+            Assert.AreEqual(result.Count, 3);
             Assert.That(result[0].TotalHoursWorked == 2);
 
         }
@@ -47,7 +47,7 @@ namespace Timelogger.Api.Tests.Domain
             //Act
             var returnProjectDTO = _projectService.AddProject(projectDTO);
             //Assert
-            Assert.AreEqual(returnProjectDTO.Id, 3);
+            Assert.AreEqual(returnProjectDTO.Id, 4);
         }
         [Test]
         public void AddProject_ShouldThrowsNameException_WithEmptyNameInput()
@@ -70,6 +70,38 @@ namespace Timelogger.Api.Tests.Domain
 
             //Assert
             Assert.That(ex.Message == "Deadline cannot be empty");
+        }
+        [Test]
+        public void DisableProject_ShouldThrowsNonExistedException_WithNonExistedInput()
+        {
+            // Arrange
+            var id = 0;
+            //Act
+            var ex = Assert.Throws<TimeloggerException>(() => _projectService.DisableProject(id));
+
+            //Assert
+            Assert.That(ex.Message == "Could not find the project");
+        }
+        [Test]
+        public void DisableProject_ShouldThrowsAlreadyDisabledException_WithId3()
+        {
+            // Arrange
+            var id = 3;
+            //Act
+            var ex = Assert.Throws<TimeloggerException>(() => _projectService.DisableProject(id));
+
+            //Assert
+            Assert.That(ex.Message == "It is already disabled");
+        }
+        [Test]
+        public void DisableProject_ShouldDisableProject_WithId_2()
+        {
+            // Arrange
+            var id = 2;
+            //Act
+            _projectService.DisableProject(id);
+
+            //Assert
         }
     }
 }

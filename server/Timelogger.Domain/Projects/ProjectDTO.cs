@@ -8,6 +8,7 @@ namespace Timelogger.Domain.Projects
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime Deadline { get; set; }
+        public bool IsDeleted { get; set; }
         public double TotalHoursWorked { get; set; }
     }
 }

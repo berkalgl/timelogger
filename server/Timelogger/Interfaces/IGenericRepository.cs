@@ -12,5 +12,7 @@ namespace Timelogger.Infrastructure.Interfaces
         void Add(T entity);
         void AddAndSave(T entity);
         T FirstOrDefault(Expression<Func<T, bool>> expression);
+        void Update(T entity);
+        void UpdateAndSave(T entity);
     }
 }

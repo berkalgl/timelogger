@@ -9,10 +9,9 @@ describe('<Timesheets />', () => {
 
     const wrapper = shallow((
         <Timesheets
-        parentId={1}
+            parent = {{id: 1}}
         />
     ));
-    console.log(wrapper.debug())
 
     it('should have Table', () => {
         expect(wrapper.find('Table').length).toEqual(1);

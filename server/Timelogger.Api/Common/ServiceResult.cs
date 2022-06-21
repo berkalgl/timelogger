@@ -34,5 +34,6 @@ namespace Timelogger.Api.Common
     {
         public static string Success = "Success";
         public static string AdditionSuccess = "Inserted Successfully";
+        public static string DisabledSuccess = "Disabled Successfully";
     }
 }

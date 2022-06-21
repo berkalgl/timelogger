@@ -43,10 +43,10 @@ export default function Table(props) {
 		data,
 		innerDataName,
 		innerComponent,
-		parentIdName,
 		parentId,
 		isAdd,
-		addForm
+		addForm,
+		refresh
 	} = props;
 	const [showAddModal, setShowAddModal] = React.useState(false)
 	const { items, requestSort, sortConfig } = useSortableData(data, null);
@@ -76,7 +76,7 @@ export default function Table(props) {
 										>
 											{column.text}
 										</button>
-										:
+										: 
 										<span>{column.text}</span>
 									}
 								</th>
@@ -108,7 +108,12 @@ export default function Table(props) {
 									columns.map((column, j) => {
 										return (
 											<td key={i + j} className={column.classes}>
-												{column.isDate ? moment(row[column.dataField]).utc().format(column.dateFormat) : row[column.dataField]}
+												{
+													column.isDate ? 
+														moment(row[column.dataField]).utc().format(column.dateFormat) : 
+														column.innerCell !== undefined ? column.innerCell(row, refresh) :
+														row[column.dataField]
+												}
 											</td>
 										)
 									})
@@ -122,9 +127,9 @@ export default function Table(props) {
 							</tr>
 							{innerDataName &&
 								<tr key={innerDataName + i}>
-									<td colSpan={4} style={{ padding: '0 !important' }}>
+									<td colSpan={columns.length} style={{ padding: '0 !important' }}>
 										<div className="accordian-body collapse" id={innerDataName + i} style={{ marginLeft: '20px', marginRight: '20px' }}>
-											{innerComponent && React.cloneElement(innerComponent, { parentId: row[parentIdName] })}
+											{innerComponent && React.cloneElement(innerComponent, { parent: row })}
 										</div>
 									</td>
 								</tr>

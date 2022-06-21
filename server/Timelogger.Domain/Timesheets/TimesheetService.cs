@@ -49,34 +49,30 @@ namespace Timelogger.Domain.Timesheets
         }
         private void IsValid(TimesheetDTO timesheetDTO)
         {
-            if(timesheetDTO == null)
-                throw new TimeloggerException("input cannot be empty");
+            if(timesheetDTO == null) throw new TimeloggerException("input cannot be empty");
 
-            if (String.IsNullOrEmpty(timesheetDTO.Comment))
-                throw new TimeloggerException("Comment cannot be empty");
+            if (String.IsNullOrEmpty(timesheetDTO.Comment)) throw new TimeloggerException("Comment cannot be empty");
 
-            if (timesheetDTO.ProjectId == 0)
-                throw new TimeloggerException("project id cannot be empty");
+            if (timesheetDTO.ProjectId == 0) throw new TimeloggerException("project id cannot be empty");
 
-            if (timesheetDTO.StartTime == DateTime.MinValue)
-                throw new TimeloggerException("Start time cannot be empty");
+            if (timesheetDTO.StartTime == DateTime.MinValue) throw new TimeloggerException("Start time cannot be empty");
 
-            if (timesheetDTO.EndTime == DateTime.MinValue)
-                throw new TimeloggerException("End time time cannot be empty");
+            if (timesheetDTO.EndTime == DateTime.MinValue) throw new TimeloggerException("End time time cannot be empty");
 
-            if (timesheetDTO.StartTime > timesheetDTO.EndTime)
-                throw new TimeloggerException("Start time cannot be bigger than End time");
+            if (timesheetDTO.StartTime > timesheetDTO.EndTime) throw new TimeloggerException("Start time cannot be bigger than End time");
 
-            if (timesheetDTO.StartTime == timesheetDTO.EndTime)
-                throw new TimeloggerException("Start time cannot be equal to End time");
+            if (timesheetDTO.StartTime == timesheetDTO.EndTime) throw new TimeloggerException("Start time cannot be equal to End time");
+
+            var relatedProject = _unitOfWork.ProjectRepository.GetById(timesheetDTO.ProjectId);
+            if (relatedProject != null && relatedProject.IsDeleted)
+                throw new TimeloggerException("You cannot insert any more timesheets because project has been disabled !");
 
             //check if timesheets intersect with each other
             var checkSameTime = _unitOfWork.TimesheetRepository
                 .FirstOrDefault(i => i.ProjectId.Equals(timesheetDTO.ProjectId) && !i.IsDeleted
                 && !(i.StartTime >= timesheetDTO.EndTime || i.EndTime <= timesheetDTO.StartTime));
 
-            if (checkSameTime != null)
-                throw new TimeloggerException("You are trying to insert a date which interects with other");
+            if (checkSameTime != null) throw new TimeloggerException("You are trying to insert a date which interects with other");
         }
     }
 }

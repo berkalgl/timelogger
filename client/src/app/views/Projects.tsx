@@ -2,13 +2,14 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import Modal from '../components/Modal';
 import Table from '../components/Table';
-import { Get, Post } from '../api/ApiHelper';
+import { Get, Post, Put } from '../api/ApiHelper';
 import Timesheets from './Timesheets';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 
 const projectGetApi = "/Projects?name=";
 const projectAddApi = "/Projects/AddProject";
+const projectDisableApi = "/Projects/DisableProject/";
 
 const fixTimezoneOffset = (date?: Date): string => {
     if (!date) return "";
@@ -35,7 +36,53 @@ const columns = [{
 	dataField: 'totalHoursWorked',
 	text: 'Total Hours',
 	classes: 'border px-4 py-2',
+}, {
+	dataField: 'isDeleted',
+	text: 'Disabled',
+	classes: 'border px-4 py-2',
+	innerCell: (row, refresh) => ( <DisableButton row={row} refresh={refresh}></DisableButton>
+	)
 }];
+
+const DisableButton = (props) => {
+	const {row, refresh} = props
+	const [disable, setDisable] = React.useState(row["isDeleted"])
+	const [buttonText, setButtonText] = React.useState(row["isDeleted"] ? "Disabled":"Disable It")
+
+	const handleProjectDisable = async (id, refresh) => {
+		await Put(projectDisableApi + id,
+			(data) => {
+				alert(data.message)
+				if (data.state === 0)
+				{
+					refresh();
+					setDisable(true)
+					setButtonText("Disabled")
+				}
+			},
+			(err) => {
+				alert('An error occured while fetching' + err)
+			})
+	};
+
+	if(disable)
+	{
+		return(
+			<div>
+				{buttonText}
+			</div>
+		)
+	}
+
+	return (
+		<div>
+			<button 
+				className = {"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}
+				onClick={e => handleProjectDisable(row["id"], refresh)}>{buttonText}</button>
+		</div>
+	)
+}
+
 
 const ProjectAddForm = props => {
     const { showModal, onClose, refresh } = props
@@ -100,7 +147,7 @@ export default function Projects() {
 
 	const handleClose = () => setShowModal(false);
 	const handleShow = () => setShowModal(true);
-
+	const handleRefresh = () => setRefreshKey(refreshKey + 1);
 	React.useEffect(() => {
 		const fetchData = async () => {
 			await Get(sourceUrl,
@@ -135,11 +182,12 @@ export default function Projects() {
 				data={sourceData}
 				columns={columns}
 				innerDataName="timesheets"
-				innerComponent={<Timesheets />}
-				parentIdName="id"
+				innerComponent={<Timesheets/>}
+				refresh = {handleRefresh}
 			/>
 
-			<ProjectAddForm showModal={showModal} onClose={handleClose} refresh={() => setRefreshKey(refreshKey + 1)}></ProjectAddForm>
+			<ProjectAddForm showModal={showModal} onClose={handleClose} refresh={handleRefresh}></ProjectAddForm>
 		</>
 	);
 }
+

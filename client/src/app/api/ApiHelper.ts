@@ -27,3 +27,17 @@ export async function Post(sourceUrl, input, successCallBack, failedCallback) {
 			failedCallback(error)
 		});
 }
+export async function Put(sourceUrl, successCallBack, failedCallback) {
+	const requestOptions = {
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json' }
+	};
+	await fetch(BASE_URL + sourceUrl,requestOptions)
+	.then(results => results.json())
+	.then(data => {
+		successCallBack(data);
+	})
+	.catch((error) => {
+		failedCallback(error)
+	});
+}

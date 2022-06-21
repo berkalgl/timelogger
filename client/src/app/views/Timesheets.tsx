@@ -57,7 +57,10 @@ const TimesheetModal = props => {
         await Post(timesheetAddApi, timesheet,
             (data) => {
                 alert(data.message)
-                refresh()
+                if(data.state === 0)
+                {
+                    refresh()
+                }
             },
             (err) => {
                 alert('An error occured while fetching' + err)
@@ -105,7 +108,9 @@ const TimesheetModal = props => {
 }
 export default function Timesheets(props) {
     // init
-    const { parentId } = props
+    const { parent } = props
+    const parentId  = parent["id"]
+    const parentDisabled = parent["isDeleted"]
     const [sourceData, setData] = React.useState([]);
     const [sourceUrl] = React.useState(timesheetGetApi);
     const [refreshKey, setRefreshKey] = React.useState(0);
@@ -129,7 +134,7 @@ export default function Timesheets(props) {
             <Table
                 columns={columns}
                 data={sourceData}
-                isAdd={true}
+                isAdd={!parentDisabled}
                 addForm={<TimesheetModal refresh={() => {setRefreshKey(refreshKey + 1)}}/>}
                 parentId={parentId}
             />

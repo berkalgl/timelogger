@@ -18,7 +18,7 @@ namespace Timelogger.Domain.Projects
         }
         public List<ProjectDTO> GetProjects(string name)
         {
-            var baseQuery = _unitOfWork.ProjectRepository.Find(i => !i.IsDeleted && (String.IsNullOrEmpty(name) || i.Name.Contains(name)));
+            var baseQuery = _unitOfWork.ProjectRepository.Find(i => (String.IsNullOrEmpty(name) || i.Name.Contains(name)));
 
             var result = baseQuery
                 .Select(i => 
@@ -26,7 +26,8 @@ namespace Timelogger.Domain.Projects
                 { 
                     Id = i.Id,
                     Name = i.Name, 
-                    Deadline = i.Deadline, 
+                    Deadline = i.Deadline,
+                    IsDeleted = i.IsDeleted,
                     TotalHoursWorked = GetTotalHoursWorked(i.Id)
                 }).ToList();
 
@@ -56,6 +57,19 @@ namespace Timelogger.Domain.Projects
 
             projectDTO.Id = lastId;
             return projectDTO;
+
+        }
+        public void DisableProject(int id)
+        {
+            var project = _unitOfWork.ProjectRepository.GetById(id);
+
+            if (project == null) throw new TimeloggerException("Could not find the project");
+
+            if (project.IsDeleted) throw new TimeloggerException("It is already disabled");
+
+            project.IsDeleted = true;
+
+            _unitOfWork.ProjectRepository.UpdateAndSave(project);
 
         }
         private double GetTotalHoursWorked(int projectId)

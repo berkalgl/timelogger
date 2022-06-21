@@ -47,5 +47,14 @@ namespace Timelogger.Infrastructure
         {
             _context.Save();
         }
+        public void Update(T entity)
+        {
+            _dbSet.Update(entity);
+        }
+        public void UpdateAndSave(T entity)
+        {
+            Update(entity);
+            Save();
+        }
     }
 }

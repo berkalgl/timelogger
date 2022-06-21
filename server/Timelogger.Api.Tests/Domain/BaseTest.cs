@@ -29,12 +29,18 @@ namespace Timelogger.Api.Tests.Domain
                 new Project{
                     Id = 1,
                     Name = "e-conomic Interview",
-                    Deadline = System.DateTime.Now
+                    Deadline = new DateTime(2022, 6, 29),
                 },
                 new Project{
                     Id = 2,
                     Name = "e-conomic Interview2",
-                    Deadline = System.DateTime.Now.AddDays(3)
+                    Deadline = new DateTime(2022, 6, 30),
+                },
+                new Project{
+                    Id = 3,
+                    Name = "e-conomic Interview3",
+                    Deadline = new DateTime(2022, 7, 1),
+                    IsDeleted = true
                 }
            };
             List<Timesheet> timesheets = new List<Timesheet>()
@@ -68,11 +74,20 @@ namespace Timelogger.Api.Tests.Domain
             #endregion
 
             #region ProjectRepository Setup
-            projectRepository.Setup(_ => _.Find(i => !i.IsDeleted && (String.IsNullOrEmpty(null) || i.Name.Contains(null)))).Returns(projects);
+            projectRepository.Setup(_ => _.Find(i => (String.IsNullOrEmpty(null) || i.Name.Contains(null)))).Returns(projects);
             projectRepository.Setup(_ => _.GetAll()).Returns(projects);
+            projectRepository.Setup(_ => _.GetById(0)).Returns((Project)null);
+            projectRepository.Setup(_ => _.GetById(2)).Returns(projects[1]);
+            projectRepository.Setup(_ => _.GetById(3)).Returns(projects[2]);
+            projectRepository.Setup(_ => _.UpdateAndSave(new Project ()
+                {
+                    Id = 2,
+                    Name = "e-conomic Interview2",
+                    Deadline = new DateTime(2022, 6, 30),
+                })).Verifiable();
             projectRepository.Setup(_ => _.AddAndSave(new Project() 
             { 
-                Id = 3,
+                Id = 4,
                 Name = "ProjectName", 
                 Deadline = new System.DateTime(2022, 6, 13, 17, 00, 0)
             })).Verifiable();

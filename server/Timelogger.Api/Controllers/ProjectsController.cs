@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Timelogger.Api.Common;
-using Timelogger.Domain.Core.Extentions;
 using Timelogger.Domain.Projects;
 
 namespace Timelogger.Api.Controllers
@@ -41,6 +40,18 @@ namespace Timelogger.Api.Controllers
             {
                 Message = ReturnMessages.AdditionSuccess,
                 Result = _projectService.AddProject(projectDTO)
+            };
+        }
+        // POST api/projects/DisableProject
+        [Route("DisableProject/{id}")]
+        [HttpPut]
+        public ServiceResult DisableProject(int id)
+        {
+            _projectService.DisableProject(id);
+
+            return new ServiceResult
+            {
+                Message = ReturnMessages.DisabledSuccess,
             };
         }
     }

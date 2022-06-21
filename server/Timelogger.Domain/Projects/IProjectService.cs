@@ -6,5 +6,6 @@ namespace Timelogger.Domain.Projects
     {
         public List<ProjectDTO> GetProjects(string name);
         public ProjectDTO AddProject(ProjectDTO projectDTO);
+        public void DisableProject(int id);
     }
 }

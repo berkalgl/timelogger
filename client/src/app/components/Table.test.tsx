@@ -31,9 +31,9 @@ describe('<Table />', () => {
     it('should have thead', () => {
         expect(wrapper.find('thead').length).toEqual(1);
     });
-    it('should have 2 columns and 5 rows', () => {
+    it('should have 2 columns and 3 rows', () => {
         expect(wrapper.find('th').length).toEqual(3);
-        expect(wrapper.find('tr').length).toEqual(5);
+        expect(wrapper.find('tr').length).toEqual(3);
     });
 
     it('should have tbody', () => {
